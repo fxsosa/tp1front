@@ -4,8 +4,9 @@ const mongoose = require('mongoose')
 // get all categorias
 const getCategorias = async (req, res) => {
   const categorias = await Categoria.find({}).sort({createdAt: -1})
+  const totalDatos = categorias.length;
 
-  res.status(200).json(categorias)
+  res.status(200).json({lista: categorias, totalDatos})
 }
 
 // get a single categoria
