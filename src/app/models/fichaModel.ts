@@ -1,7 +1,7 @@
 import { Persona } from "./personaModel";
 import { Categoria } from "./categoriaModel";
 
-export class FichaMedica {
+export class Ficha {
   _id!: string; 
   fecha!: Date;
   motivoConsulta!: string;
