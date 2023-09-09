@@ -1,0 +1,11 @@
+<p>hola</p>
+<div *ngIf="categorias.length>0">
+  <table border="1">
+    <tr>
+      <td>Descripcion</td>
+    </tr>
+    <tr *ngFor="let c of categorias">
+      <td>{{c.descripcion}}</td>
+    </tr>
+  </table>
+</div>
