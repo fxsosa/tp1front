@@ -14,7 +14,6 @@ export class CategoriaComponent implements OnInit{
      this.categoriaService.getAllCategorias().subscribe({
       next: (entity) => {
         this.categorias = entity.lista;
-        console.log("oooooooooop");
       },
       error: (error) => {
         console.log("No se pudieron conseguir las categorías:", error);

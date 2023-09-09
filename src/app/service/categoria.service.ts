@@ -9,12 +9,15 @@ import { Categoria } from '../models/categoriaModel';
   providedIn: 'root'
 })
 export class CategoriaService {
-  private api: string = 'http://localhost:4000/api/categoria/';
+  private api: string = '/api/categoria/';
 
 
   constructor(private http: HttpClient) { }
   getAllCategorias(): Observable<Lista<Categoria>>{
     return this.http.get<Lista<Categoria>>(this.api)
+  }
+  getCategoria(): Observable<Categoria>{
+    return this.http.get<Categoria>(this.api + '64f67d67edfa4ac5bc60f62c')
   }
   
 }
