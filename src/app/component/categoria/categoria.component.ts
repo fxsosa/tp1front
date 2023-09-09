@@ -11,9 +11,14 @@ export class CategoriaComponent implements OnInit{
   categorias: Categoria[] = []
   constructor(private categoriaService: CategoriaService){}
   ngOnInit(): void {
-    this.categoriaService.getAllCategorias().subscribe(
-      entity => this.categorias = entity.lista,
-      error => console.log("No se pudieron conseguir las categorias")
-    )
+     this.categoriaService.getAllCategorias().subscribe({
+      next: (entity) => {
+        this.categorias = entity.lista;
+        console.log("oooooooooop");
+      },
+      error: (error) => {
+        console.log("No se pudieron conseguir las categorías:", error);
+      }
+    });
   }
 }
