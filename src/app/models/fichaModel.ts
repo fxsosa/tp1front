@@ -6,7 +6,7 @@ export class Ficha {
   fecha!: Date;
   motivoConsulta!: string;
   diagnostico: string = '';
-  idDoctor!: Persona; 
-  idPaciente!: Persona; 
+  idDoctor!: string; 
+  idPaciente!: string; 
   idCategoria!: Categoria; 
 }

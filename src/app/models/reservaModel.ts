@@ -4,6 +4,6 @@ export class Reserva {
   fechaInicioReserva!: Date;
   fechaFinReserva!: Date;
   cancelada: boolean = false;
-  idDoctor!: Persona; 
-  idPaciente!: Persona; 
+  idDoctor!: string; 
+  idPaciente!: string; 
 }
