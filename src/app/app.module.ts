@@ -6,6 +6,9 @@ import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { CategoriaComponent } from './component/categoria/categoria.component';
 import { CategoriaService } from './service/categoria.service';
+import { PersonaService } from './service/persona.service'; 
+import { ReservaService } from './service/reserva.service';
+import { FichaService } from './service/ficha.service';
 import { HttpClientModule } from '@angular/common/http';
 
 @NgModule({
@@ -19,7 +22,7 @@ import { HttpClientModule } from '@angular/common/http';
     HttpClientModule,
     FormsModule
   ],
-  providers: [CategoriaService],
+  providers: [CategoriaService, ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
