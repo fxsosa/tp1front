@@ -8,12 +8,19 @@ import { CategoriaService } from '../../service/categoria.service';
   styleUrls: ['./categoria.component.css']
 })
 export class CategoriaComponent implements OnInit{
+  //Para el getAll
   categorias: Categoria[] = []
+  //Para el get
   categoriaPrueba: Categoria = {_id:'', descripcion:''}
+  //Para el post
   categoriaAdd: Categoria = {_id:'', descripcion:''}
+  //Para el delete
   categoriaDeleteId: string = ''
   categoriaDeleted: Categoria = {_id:'', descripcion:''}
 
+  //Para el update
+  categoriaUpdate: any = {}
+  categoriaUpdated: Categoria = {_id:'', descripcion:''}
   constructor(private categoriaService: CategoriaService){}
 
   ngOnInit(): void {
@@ -30,7 +37,7 @@ export class CategoriaComponent implements OnInit{
         this.categoriaPrueba = entity;
       },
       error: (error) => {
-        console.log("No se pudieron conseguir las categorías:", error);
+        console.log("No se pudo conseguir la categoria:", error);
       }
     });
 
@@ -41,7 +48,7 @@ export class CategoriaComponent implements OnInit{
         this.categoriaAdd = entity;
       },
       error: (error) => {
-        console.log("No se pudieron conseguir las categorías:", error);
+        console.log("No se pudo crear la categoria:", error);
       }
     });
   }
@@ -51,9 +58,18 @@ export class CategoriaComponent implements OnInit{
         this.categoriaDeleted = entity;
       },
       error: (error) => {
-        console.log("No se pudieron conseguir las categorías:", error);
+        console.log("No se pudo eliminar la categoria", error);
       }
     });
-
+  }
+  updateCategoria(): void{
+    this.categoriaService.update(this.categoriaUpdate).subscribe({
+      next: (entity) => {
+        this.categoriaUpdated = entity;
+      },
+      error: (error) => {
+        console.log("No se pudo actualizar la categoria:", error);
+      }
+    });
   }
 }
