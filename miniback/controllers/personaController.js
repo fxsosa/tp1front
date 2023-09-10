@@ -6,7 +6,7 @@ const getPersonas = async (req, res) => {
   const personas = await Persona.find({}).sort({createdAt: -1})
   const totalDatos = personas.length;
 
-  res.status(200).json({lista: pesonas, totalDatos})
+  res.status(200).json({lista: personas, totalDatos})
 }
 
 // get by es doctor
