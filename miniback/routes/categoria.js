@@ -22,6 +22,6 @@ router.post('/', createCategoria)
 router.delete('/:id', deleteCategoria)
 
 // UPDATE a categoria
-router.patch('/:id', updateCategoria)
+router.patch('/', updateCategoria)
 
 module.exports = router

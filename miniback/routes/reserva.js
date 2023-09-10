@@ -22,6 +22,6 @@ router.post('/', createReserva)
 router.delete('/:id', deleteReserva)
 
 // UPDATE a reserva
-router.patch('/:id', updateReserva)
+router.patch('/', updateReserva)
 
 module.exports = router

@@ -26,6 +26,6 @@ router.post('/', createPersona)
 router.delete('/:id', deletePersona)
 
 // UPDATE a persona
-router.patch('/:id', updatePersona)
+router.patch('/', updatePersona)
 
 module.exports = router

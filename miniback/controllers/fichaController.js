@@ -64,13 +64,11 @@ const deleteFicha = async (req, res) => {
 
 // update a ficha
 const updateFicha = async (req, res) => {
-  const { id } = req.params
-
-  if (!mongoose.Types.ObjectId.isValid(id)) {
+  if (!mongoose.Types.ObjectId.isValid(req.body._id)) {
     return res.status(400).json({error: 'No such ficha'})
   }
 
-  const ficha = await Ficha.findOneAndUpdate({_id: id}, {
+  const ficha = await Ficha.findOneAndUpdate({_id: req.body._id}, {
     ...req.body
   })
 

@@ -72,13 +72,11 @@ const deletePersona = async (req, res) => {
 
 // update a persona
 const updatePersona = async (req, res) => {
-  const { id } = req.params
-
-  if (!mongoose.Types.ObjectId.isValid(id)) {
+  if (!mongoose.Types.ObjectId.isValid(req.body._id)) {
     return res.status(400).json({error: 'No such persona'})
   }
 
-  const persona = await Persona.findOneAndUpdate({_id: id}, {
+  const persona = await Persona.findOneAndUpdate({_id: req.body._id}, {
     ...req.body
   })
 

@@ -58,13 +58,12 @@ const deleteCategoria = async (req, res) => {
 
 // update a categoria
 const updateCategoria = async (req, res) => {
-  const { id } = req.params
-
-  if (!mongoose.Types.ObjectId.isValid(id)) {
+  if (!mongoose.Types.ObjectId.isValid(req.body._id)) {
     return res.status(400).json({error: 'No such categoria'})
   }
+  
 
-  const categoria = await Categoria.findOneAndUpdate({_id: id}, {
+  const categoria = await Categoria.findOneAndUpdate({_id: req.body._id}, {
     ...req.body
   })
 

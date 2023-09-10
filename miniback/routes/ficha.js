@@ -22,6 +22,6 @@ router.post('/', createFicha)
 router.delete('/:id', deleteFicha)
 
 // UPDATE a ficha
-router.patch('/:id', updateFicha)
+router.patch('/', updateFicha)
 
 module.exports = router

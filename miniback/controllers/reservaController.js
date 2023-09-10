@@ -63,13 +63,11 @@ const deleteReserva = async (req, res) => {
 
 // update a reserva
 const updateReserva = async (req, res) => {
-  const { id } = req.params
-
-  if (!mongoose.Types.ObjectId.isValid(id)) {
+  if (!mongoose.Types.ObjectId.isValid(req.body._id)) {
     return res.status(400).json({error: 'No such reserva'})
   }
 
-  const reserva = await Reserva.findOneAndUpdate({_id: id}, {
+  const reserva = await Reserva.findOneAndUpdate({_id: req.body._id}, {
     ...req.body
   })
 
