@@ -1,10 +1,26 @@
 <div *ngIf="categorias.length>0">
   <table border="1">
     <tr>
+      <td>id</td>
       <td>Descripcion</td>
     </tr>
     <tr *ngFor="let c of categorias">
+      <td>{{c._id}}</td>
       <td>{{c.descripcion}}</td>
     </tr>
   </table>
+</div>
+<p>_id:{{categoriaPrueba._id}}</p>
+<p>desc:{{categoriaPrueba.descripcion}}</p>
+<p>Agregar categoria</p>
+<div>Descripcion <input  [(ngModel)]="categoriaAdd.descripcion">
+<br>
+ <button  (click)="createCategoria()">Crear</button>
+<br/>
+</div>
+<p>Eliminar categoria</p>
+<div>id <input  [(ngModel)]="categoriaDeleteId">
+<br>
+ <button  (click)="deleteCategoria()">Eliminar</button>
+<br/>
 </div>
