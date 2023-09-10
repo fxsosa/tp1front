@@ -4,8 +4,9 @@ const mongoose = require('mongoose')
 // get all personas
 const getPersonas = async (req, res) => {
   const personas = await Persona.find({}).sort({createdAt: -1})
+  const totalDatos = personas.length;
 
-  res.status(200).json(personas)
+  res.status(200).json({lista: pesonas, totalDatos})
 }
 
 // get by es doctor

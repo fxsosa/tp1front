@@ -7,8 +7,9 @@ const mongoose = require('mongoose')
 // get all fichas
 const getFichas = async (req, res) => {
   const fichas = await Ficha.find({}).sort({createdAt: -1})
+  const totalDatos = fichas.length;
 
-  res.status(200).json(fichas)
+  res.status(200).json({lista: fichas, totalDatos})
 }
 
 // get a single ficha

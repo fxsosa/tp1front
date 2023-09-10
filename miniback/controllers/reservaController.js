@@ -7,7 +7,9 @@ const mongoose = require('mongoose')
 const getReservas = async (req, res) => {
   const reservas = await Reserva.find({}).sort({createdAt: -1})
 
-  res.status(200).json(reservas)
+  const totalDatos = reservas.length;
+
+  res.status(200).json({lista: reservas, totalDatos})
 }
 
 // get a single reserva
