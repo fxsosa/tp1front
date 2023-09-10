@@ -1,9 +1,8 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http'
+import { HttpClient, HttpParams, HttpHeaders } from '@angular/common/http'
 import { Observable } from 'rxjs';
 import { Lista } from '../models/listaModel';
 import { Categoria } from '../models/categoriaModel';
-
 
 @Injectable({
   providedIn: 'root'
@@ -11,13 +10,23 @@ import { Categoria } from '../models/categoriaModel';
 export class CategoriaService {
   private api: string = '/api/categoria/';
 
-
   constructor(private http: HttpClient) { }
-  getAllCategorias(): Observable<Lista<Categoria>>{
+  getAll(): Observable<Lista<Categoria>>{
     return this.http.get<Lista<Categoria>>(this.api)
   }
-  getCategoria(): Observable<Categoria>{
-    return this.http.get<Categoria>(this.api + '64f67d67edfa4ac5bc60f62c')
+
+  get(idCategoria: string): Observable<Categoria>{
+    return this.http.get<Categoria>(`${this.api}/${idCategoria}`)
+  }
+
+  create(nuevaCategoria: Categoria) {
+      let options = {
+      headers: new HttpHeaders({ "Access-Control-Allow-Headers": 'Content-Type', 'Content-Type': 'application/json' })
+    }
+    return this.http.post<Categoria>(this.api, nuevaCategoria, options);
+  }
+  update(categoriaActualizada: any) {
+    return this.http.put<Categoria>(this.api, categoriaActualizada);
   }
   
 }
