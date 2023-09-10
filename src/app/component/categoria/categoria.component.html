@@ -1,3 +1,4 @@
+<p>getAll</p>
 <div *ngIf="categorias.length>0">
   <table border="1">
     <tr>
@@ -10,6 +11,7 @@
     </tr>
   </table>
 </div>
+<p>get</p>
 <p>_id:{{categoriaPrueba._id}}</p>
 <p>desc:{{categoriaPrueba.descripcion}}</p>
 <p>Agregar categoria</p>
@@ -18,12 +20,14 @@
  <button  (click)="createCategoria()">Crear</button>
 <br/>
 </div>
+<p>delete</p>
 <p>Eliminar categoria</p>
 <div>id <input  [(ngModel)]="categoriaDeleteId">
 <br>
  <button  (click)="deleteCategoria()">Eliminar</button>
 <br/>
 </div>
+<p>update</p>
 <p>Actualizar categoria</p>
 <div>id <input  [(ngModel)]="categoriaUpdate._id">
 <div>descripcion <input  [(ngModel)]="categoriaUpdate.descripcion">
