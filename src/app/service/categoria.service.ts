@@ -26,7 +26,7 @@ export class CategoriaService {
     return this.http.post<Categoria>(this.api, nuevaCategoria, options);
   }
   update(categoriaActualizada: any) {
-    return this.http.put<Categoria>(this.api, categoriaActualizada);
+    return this.http.patch<any>(this.api, categoriaActualizada);
   }
   delete(idCategoria: string) {
     return this.http.delete<Categoria>(`${this.api}/${idCategoria}`)
