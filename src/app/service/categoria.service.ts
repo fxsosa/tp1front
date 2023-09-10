@@ -28,5 +28,8 @@ export class CategoriaService {
   update(categoriaActualizada: any) {
     return this.http.put<Categoria>(this.api, categoriaActualizada);
   }
+  delete(idCategoria: string) {
+    return this.http.delete<Categoria>(`${this.api}/${idCategoria}`)
+  }
   
 }
