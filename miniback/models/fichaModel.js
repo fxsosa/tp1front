@@ -7,6 +7,11 @@ const fichaSchema = new Schema({
     type: Date,
     required: true
   },
+  idReserva: {
+    type: Schema.Types.ObjectId,
+    ref: 'reserva',
+    required: true
+  },
   motivoConsulta: {
     type: String,
     required: true

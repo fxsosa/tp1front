@@ -2,6 +2,7 @@
 const Ficha = require('../models/fichaModel')
 const Persona = require('../models/personaModel')
 const Categoria = require('../models/categoriaModel')
+const Reserva = require('../models/reservaModel')
 const mongoose = require('mongoose')
 
 // get all fichas
@@ -31,14 +32,23 @@ const getFicha = async (req, res) => {
 
 // create a new ficha
 const createFicha = async (req, res) => {
-  const {fecha, motivoConsulta, diagnostico, descripcionCategoria, cedulaDoctor, cedulaPaciente} = req.body
+  const {fecha, motivoConsulta, diagnostico, idCategoria, idDoctor, idPaciente, idReserva} = req.body
 
   // add to the database
   try {
-    const idDoctor = await Persona.findOne({cedula: cedulaDoctor})
-    const idPaciente = await Persona.findOne({cedula: cedulaPaciente})
-    const idCategoria = await Categoria.findOne({descripcion: descripcionCategoria})
-    const ficha = await Ficha.create({fecha, motivoConsulta, diagnostico, descripcionCategoria, cedulaDoctor, cedulaPaciente})
+    if (!mongoose.Types.ObjectId.isValid(idDoctor)) {
+      return res.status(404).json({error: 'No such Doctor'})
+    }
+    if (!mongoose.Types.ObjectId.isValid(idPaciente)) {
+      return res.status(404).json({error: 'No such Paciente'})
+    }
+    if (!mongoose.Types.ObjectId.isValid(idReserva)) {
+      return res.status(404).json({error: 'No such Reserva'})
+    }
+    if (!mongoose.Types.ObjectId.isValid(idCategoria)) {
+      return res.status(404).json({error: 'No such Categoria'})
+    }
+    const ficha = await Ficha.create({fecha, motivoConsulta, diagnostico, idCategoria, idDoctor, idPaciente, idReserva})
     res.status(200).json(ficha)
   } catch (error) {
     res.status(400).json({ error: error.message })
