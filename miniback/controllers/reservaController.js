@@ -35,8 +35,12 @@ const createReserva = async (req, res) => {
 
   // add to the database
   try {
-    const doctor = await Persona.findById(idDoctor)._id
-    const paciente = await Persona.findById(idPaciente)._id
+  if (!mongoose.Types.ObjectId.isValid(idPaciente)) {
+    return res.status(400).json({error: 'No such Paciente'})
+  }
+  if (!mongoose.Types.ObjectId.isValid(idDoctor)) {
+    return res.status(400).json({error: 'No such Doctor'})
+  }
     const reserva = await Reserva.create({fechaInicioReserva, fechaFinReserva, idDoctor, idPaciente})
     res.status(200).json(reserva)
   } catch (error) {
