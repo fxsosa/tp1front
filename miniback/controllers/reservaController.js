@@ -31,12 +31,12 @@ const getReserva = async (req, res) => {
 
 // create a new reserva
 const createReserva = async (req, res) => {
-  const {fechaInicioReserva, fechaFinReserva, cedulaDoctor, cedulaPaciente} = req.body
+  const {fechaInicioReserva, fechaFinReserva, idPaciente, idDoctor} = req.body
 
   // add to the database
   try {
-    const idDoctor = await Persona.findOne({cedula: cedulaDoctor})
-    const idPaciente = await Persona.findOne({cedula: cedulaPaciente})
+    const doctor = await Persona.findById(idDoctor)._id
+    const paciente = await Persona.findById(idPaciente)._id
     const reserva = await Reserva.create({fechaInicioReserva, fechaFinReserva, idDoctor, idPaciente})
     res.status(200).json(reserva)
   } catch (error) {
