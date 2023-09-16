@@ -10,11 +10,13 @@ import { PersonaService } from './service/persona.service';
 import { ReservaService } from './service/reserva.service';
 import { FichaService } from './service/ficha.service';
 import { HttpClientModule } from '@angular/common/http';
+import { HomePageComponent } from './component/home-page/home-page.component';
 
 @NgModule({
   declarations: [
     AppComponent,
-    CategoriaComponent
+    CategoriaComponent,
+    HomePageComponent
   ],
   imports: [
     BrowserModule,

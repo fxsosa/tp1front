@@ -1,0 +1,35 @@
+/* Estilizar el contenedor */
+.container {
+  margin-top: 50px;
+}
+
+/* Aumentar el espacio entre los elementos de la lista */
+.list-group-item {
+  margin: 10px 0;
+  padding: 20px;
+  border-radius: 10px;
+  /* Añadir bordes redondeados */
+  transition: background-color 0.3s ease, transform 0.3s ease;
+  /* Transición suave para hover */
+}
+
+/* Efecto hover para los elementos de la lista */
+.list-group-item:hover {
+  background-color: #f1f1f1;
+  /* Cambiar el color de fondo */
+  transform: scale(1.02);
+  /* Aumentar un poco el tamaño */
+  cursor: pointer;
+  /* Cambiar el cursor */
+}
+
+/* Añadir estilo a la descripción de cada opción */
+.list-group-item div.fs-3 {
+  margin-bottom: 5px;
+}
+
+/* Añadir más estilo al título */
+h1.text-center {
+  margin-bottom: 40px;
+  font-weight: bold;
+}
