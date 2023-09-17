@@ -11,12 +11,14 @@ import { ReservaService } from './service/reserva.service';
 import { FichaService } from './service/ficha.service';
 import { HttpClientModule } from '@angular/common/http';
 import { HomePageComponent } from './component/home-page/home-page.component';
+import { PersonaComponent } from './component/persona/persona.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     CategoriaComponent,
-    HomePageComponent
+    HomePageComponent,
+    PersonaComponent
   ],
   imports: [
     BrowserModule,
