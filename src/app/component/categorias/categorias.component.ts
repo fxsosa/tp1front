@@ -80,7 +80,11 @@ export class CategoriasComponent implements OnInit {
       this.categoriaService.update(this.categoriaUpdated).subscribe({
         next: () => {
           //si se acepta, guarda el nuevo valor en su lugar, para no repetir la consulta de todos los datos a la bd
-          const newvalor = this.categorias.find(this.categoriaUpdate);
+          const newvalor = this.categorias.find(
+            (obj) =>
+              obj._id ==
+              this.categoriaUpdate._id
+          );
           if (newvalor) {
             newvalor.descripcion = this.categoriaUpdated.descripcion;
           }
@@ -150,7 +154,8 @@ export class CategoriasComponent implements OnInit {
    */
   verCategoria(elemento: Categoria) {
     this.abrirModal('editar');
-    this.categoriaUpdated = this.categoriaUpdate = elemento;
+    this.categoriaUpdated = {...elemento};
+    this.categoriaUpdate = { ...elemento};
   }
 
   /**
