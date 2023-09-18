@@ -24,7 +24,7 @@ import { HomePageComponent } from './component/home-page/home-page.component';
     HttpClientModule,
     FormsModule
   ],
-  providers: [CategoriaService, ],
+  providers: [CategoriaService, PersonaService, ReservaService, FichaService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
