@@ -12,13 +12,15 @@ import { FichaService } from './service/ficha.service';
 import { HttpClientModule } from '@angular/common/http';
 import { HomePageComponent } from './component/home-page/home-page.component';
 import { CategoriasComponent } from './component/categorias/categorias.component';
+import { ReservasComponent } from './component/reservas/reservas.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     CategoriaComponent,
     HomePageComponent,
-    CategoriasComponent
+    CategoriasComponent,
+    ReservasComponent
   ],
   imports: [
     BrowserModule,

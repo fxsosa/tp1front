@@ -3,11 +3,13 @@ import { RouterModule, Routes } from '@angular/router';
 import { CategoriaComponent } from './component/categoria/categoria.component';
 import { HomePageComponent } from './component/home-page/home-page.component';
 import { CategoriasComponent } from './component/categorias/categorias.component';
+import { ReservasComponent } from './component/reservas/reservas.component';
 
 const routes: Routes = [
   {path:'categoria',component:CategoriaComponent},
   {path:'',component:HomePageComponent},
-  {path:'categorias',component:CategoriasComponent}
+  {path:'categorias',component:CategoriasComponent},
+  {path:'reservas', component:ReservasComponent}
 ];
 
 @NgModule({
