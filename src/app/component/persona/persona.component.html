@@ -1,35 +1,91 @@
+<div class="container">
+    <h1>Gestión de Personas</h1>
 <div class="table-responsive">
     <table class="table table-primary">
         <thead>
             <tr>
                 <th scope="col">Id</th>
+                <th scope="col">Nro. Cédula</th>
                 <th scope="col">Nombre</th>
                 <th scope="col">Apellido</th>
                 <th scope="col">Teléfono</th>
                 <th scope="col">Correo</th>
-                <th scope="col">Nro. Cédula</th>
-                <th scope="col"></th>
+                <th scope="col">Descripción</th>
             </tr>
         </thead>
         <tbody>
-            <tr class="">
-                <td scope="row">R1C1</td>
-                <td>R1C2</td>
-                <td>R1C3</td>
-                <td>R1C3</td>
-                <td>R1C3</td>
-                <td>R1C3</td>
-                <td>R1C3</td>
-            </tr>
-            <tr class="">
-                <td scope="row">Item</td>
-                <td>Item</td>
-                <td>Item</td>
-                <td>R1C3</td>
-                <td>R1C3</td>
-                <td>R1C3</td>
-                <td>R1C3</td>
+            <tr class="" *ngFor="let p of personas">
+                <td scope="row">{{p._id}}</td>
+                <td>{{p.cedula}}</td>
+                <td>{{p.nombre}}</td>
+                <td>{{p.apellido}}</td>
+                <td>{{p.telefono}}</td>
+                <td>{{p.email}}</td>
+                <td>{{p.esDoctor ? 'Doctor' : 'Paciente'}}</td>
             </tr>
         </tbody>
     </table>
 </div>
+<h3>Agregar Persona</h3>
+<form>
+    <div class="mb-3">
+      <label class="form-label">Nombre</label>
+      <input class="form-control" [(ngModel)]="personaAdd.nombre" name="nombre">
+    </div>
+    <div class="mb-3">
+        <label class="form-label">Apellido</label>
+        <input class="form-control" [(ngModel)]="personaAdd.apellido" name="apellido">                         
+    </div>
+    <div class="mb-3">
+        <label class="form-label">Número de Cedula</label>
+        <input class="form-control" [(ngModel)]="personaAdd.cedula" name="cedula">                         
+    </div>
+    <div class="mb-3">
+        <label class="form-label">Correo Electrónico</label>
+        <input class="form-control" [(ngModel)]="personaAdd.email" name="correo">                         
+    </div>
+    <div class="mb-3">
+        <label class="form-label">Teléfono</label>
+        <input class="form-control" [(ngModel)]="personaAdd.telefono" name="telefono">                         
+    </div>
+    <label class="form-label">Tipo</label>
+    <select class="form-select" [(ngModel)]="personaAdd.esDoctor" name="esDoctor">
+        <option selected>Elige un tipo</option>
+        <option value="false">Paciente</option>
+        <option value="true">Doctor</option>
+    </select>
+    <button (click)="createPersona()" class="btn btn-primary">Crear</button>
+  </form>
+
+    <h3>Actualizar Persona</h3>
+    <form >
+        <div class="mb-3">
+            <label class="form-label">Id</label>
+            <input class="form-control" [(ngModel)]="personaUpdate._id" name="id" required>
+        </div>
+        <div class="mb-3">
+            <label class="form-label">Nombre</label>
+            <input class="form-control" [(ngModel)]="personaUpdate.nombre" name="nombre">
+        </div>
+        <div class="mb-3">
+            <label class="form-label">Apellido</label>
+            <input class="form-control" [(ngModel)]="personaUpdate.apellido" name="apellido">                         
+        </div>
+        <div class="mb-3">
+            <label class="form-label">Correo Electrónico</label>
+            <input class="form-control" [(ngModel)]="personaUpdate.email" name="correo">                         
+        </div>
+        <div class="mb-3">
+            <label class="form-label">Teléfono</label>
+            <input class="form-control" [(ngModel)]="personaUpdate.telefono" name="telefono">                         
+        </div>
+        <label class="form-label">Tipo</label>
+        <select class="form-select" [(ngModel)]="personaUpdate.esDoctor" name="esDoctor">
+            <option selected>Elige un tipo</option>
+            <option value="false">Paciente</option>
+            <option value="true">Doctor</option>
+        </select>
+        <button (click)="updatePersona()" class="btn btn-primary">Actualizar</button>
+    </form>
+    </div>
+

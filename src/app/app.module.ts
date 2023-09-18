@@ -26,7 +26,7 @@ import { PersonaComponent } from './component/persona/persona.component';
     HttpClientModule,
     FormsModule
   ],
-  providers: [CategoriaService, ],
+  providers: [CategoriaService, PersonaService ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
