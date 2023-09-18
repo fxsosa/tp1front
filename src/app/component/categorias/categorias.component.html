@@ -1,0 +1,89 @@
+<div class="container">
+  <table class="table table-hover">
+    <thead>
+      <tr>
+        <th scope="col" class="col-2">
+          <form class="d-flex" role="search">
+            <div class="input-group">
+              <div class="input-group-text" id="btnGroupAddon"><i class="bi bi-search"></i></div>
+              <input class="form-control text-center" [formControl]="filtroIdControl" type="search" placeholder="ID" aria-label="Search">
+            </div>
+          </form>
+        </th>
+        <th scope="col" class="col-8">
+          <form class="d-flex" role="search">
+            <div class="input-group">
+              <div class="input-group-text" id="btnGroupAddon"><i class="bi bi-search"></i></div>
+              <input class="form-control" type="search" placeholder="Descripción" [formControl]="filtroDescripcionControl"  aria-label="Search">
+            </div>
+          </form>
+        </th>
+        <th scope="col" class="col-2 ">
+           <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#verModal" (click)="abrirModal('nuevo')">
+              <i class="bi bi-plus-circle"></i>
+            </button>
+        </th>
+      </tr>
+    </thead>
+    <tbody>
+
+      <tr *ngFor="let c of categoriasFiltradas">
+        <td class="text-center align-middle">{{c._id}}</td>
+        <td class="align-middle">{{c.descripcion}}</td>
+        <td>
+          <div class="btn-group" role="group" aria-label="Basic example">
+            <button type="button" class="btn btn-outline-primary" data-bs-toggle="modal" data-bs-target="#verModal" (click)="verCategoria(c)"><i class="bi bi-pencil"></i></button>
+            <button type="button" class="btn btn-outline-danger" data-bs-toggle="modal" data-bs-target="#eliminarModal" (click)="verCategoria(c)"><i class="bi bi-x-circle"></i></button>
+          </div>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+
+  <!-- Modal para editar o agregar -->
+  <div class="modal fade" id="verModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h1 class="modal-title fs-5" id="exampleModalLabel">{{tituloModal}}</h1>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <div class="mb-3">
+            <label for="campo-id" class="col-form-label">ID:</label>
+            <input type="text" class="form-control" disabled id="campo-id" [(ngModel)]="categoriaUpdated._id">
+          </div>
+          <div class="mb-3">
+            <label for="campo-descripcion" class="col-form-label">Descripción:</label>
+            <input type="text" class="form-control" id="campo-descripcion" [(ngModel)]="categoriaUpdated.descripcion">
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" (click)="limpiarModal()">Cerrar</button>
+          <button type="button" class="btn btn-primary" (click)="tituloModal=='Nuevo'?nuevo():editar()" data-bs-dismiss="modal">Guardar</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+   <!-- Modal para eliminar -->
+  <div class="modal fade" id="eliminarModal" tabindex="-1">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">Eliminar</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <p>¿Eliminar la categoría "{{categoriaUpdated.descripcion}}"?</p>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" (click)="limpiarModal()">Cancelar</button>
+          <button type="button" class="btn btn-danger" (click)="eliminar()" data-bs-dismiss="modal">Eliminar</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+</div>
