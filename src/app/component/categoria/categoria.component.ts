@@ -32,13 +32,13 @@ export class CategoriaComponent implements OnInit{
         console.log("No se pudieron conseguir las categorías:", error);
       }
     });
-    this.categoriaService.get("64f67e4cedfa4ac5bc60f631").subscribe({
+    this.categoriaService.get('64fe4da1f9f5a93f587a9fef').subscribe({
       next: (entity) => {
         this.categoriaPrueba = entity;
       },
       error: (error) => {
-        console.log("No se pudo conseguir la categoria:", error);
-      }
+        console.log('No se pudo conseguir la categoria:', error);
+      },
     });
 
   }
