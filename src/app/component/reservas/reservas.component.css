@@ -1,0 +1,17 @@
+.list-group-item {
+  transition: background-color 0.3s ease;
+}
+
+.list-group-item:hover {
+  background-color: #f1f1f1;
+}
+
+
+.list-group-item {
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.list-group-container {
+  max-height: 100px;  /* Altura máxima que desees */
+  overflow-y: auto;  /* Habilitar desplazamiento vertical */
+}
