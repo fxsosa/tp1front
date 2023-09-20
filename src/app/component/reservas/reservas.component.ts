@@ -214,8 +214,8 @@ export class ReservasComponent {
       this.doctoresFiltrados = [...this.allDoctores];
     }
     if (
-      this.formFiltrar.value.pacienteNombre ||
-      this.formFiltrar.value.pacienteApellido
+      this.formFiltrar.value.pacienteNombre !== ''||
+      this.formFiltrar.value.pacienteApellido !== ''
     ) {
       this.pacientesFiltrados = this.allPacientes.filter((paciente) => {
         const pacienteNombreMatch = this.formFiltrar.value.pacienteNombre
@@ -236,25 +236,25 @@ export class ReservasComponent {
 
     this.reservasFiltradas = this.allReservas.filter((reserva) => {
       const nombreDoctorMatch = this.doctoresFiltrados.some((doctor) => {
-        return this.formFiltrar.value.doctorNombre !== ''
-          ? doctor.nombre.includes(
+        return this.formFiltrar.value.doctorNombre?.toLowerCase() !== ''
+          ? doctor.nombre.toLowerCase().includes(
               this.formFiltrar.value.doctorNombre!.toString()
             )
           : true;
       });
       const apellidoDoctorMatch = this.doctoresFiltrados.some((doctor) => {
-        return this.formFiltrar.value.doctorApellido !== ''
-          ? doctor.apellido.includes(this.formFiltrar.value.doctorApellido!)
+        return this.formFiltrar.value.doctorApellido?.toLowerCase() !== ''
+          ? doctor.apellido.toLowerCase().includes(this.formFiltrar.value.doctorApellido!.toString())
           : true;
       });
       const nombrePacienteMatch = this.pacientesFiltrados.some((paciente) => {
-        return this.formFiltrar.value.pacienteNombre !== ''
-          ? paciente.nombre.includes(this.formFiltrar.value.pacienteNombre!)
+        return this.formFiltrar.value.pacienteNombre?.toLowerCase() !== ''
+          ? paciente.nombre.toLowerCase().includes(this.formFiltrar.value.pacienteNombre!.toString())
           : true;
       });
       const apellidoPacienteMatch = this.pacientesFiltrados.some((paciente) => {
-        return this.formFiltrar.value.pacienteApellido !== ''
-          ? paciente.apellido.includes(this.formFiltrar.value.pacienteApellido!)
+        return this.formFiltrar.value.pacienteApellido?.toLowerCase() !== ''
+          ? paciente.apellido.toLowerCase().includes(this.formFiltrar.value.pacienteApellido!.toString())
           : true;
       });
       const fechaDesdeMatch =
