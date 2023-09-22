@@ -13,6 +13,7 @@ import { HttpClientModule } from '@angular/common/http';
 import { HomePageComponent } from './component/home-page/home-page.component';
 import { CategoriasComponent } from './component/categorias/categorias.component';
 import { ReservasComponent } from './component/reservas/reservas.component';
+import { FichasComponent } from './component/fichas/fichas.component';
 
 @NgModule({
   declarations: [
@@ -20,7 +21,8 @@ import { ReservasComponent } from './component/reservas/reservas.component';
     CategoriaComponent,
     HomePageComponent,
     CategoriasComponent,
-    ReservasComponent
+    ReservasComponent,
+    FichasComponent
   ],
   imports: [
     BrowserModule,

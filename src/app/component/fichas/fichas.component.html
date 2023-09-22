@@ -1,0 +1,367 @@
+<div class="container">
+  <div class="my-4">
+    <form
+      action=""
+      class="form"
+      [formGroup]="formFiltrar"
+      (ngSubmit)="filtrar()"
+    >
+      <div class="row">
+        <div class="col-12 col-lg-6">
+          <label for="datosDoctor" class="form-label">Doctor</label>
+          <div class="input-group">
+            <input
+              type="text"
+              aria-label="Nombre"
+              class="form-control"
+              id="datosDoctor"
+              placeholder="Nombre"
+              formControlName="doctorNombre"
+            />
+            <input
+              type="text"
+              aria-label="Apellido"
+              class="form-control"
+              placeholder="Apellido"
+              formControlName="doctorApellido"
+            />
+          </div>
+        </div>
+        <div class="col-12 col-lg-6">
+          <label for="datosPaciente" class="form-label">Paciente</label>
+          <div class="input-group">
+            <input
+              type="text"
+              aria-label="Nombre"
+              class="form-control"
+              id="datosPaciente"
+              placeholder="Nombre"
+              formControlName="pacienteNombre"
+            />
+            <input
+              type="text"
+              aria-label="Apellido"
+              class="form-control"
+              placeholder="Apellido"
+              formControlName="pacienteApellido"
+            />
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-12 col-lg-6">
+          <label for="filtroFechaDesde" class="form-label">Fecha desde</label>
+          <input
+            class="form-control"
+            type="date"
+            name="Desde"
+            id="filtroFechaDesde"
+            formControlName="fechaDesde"
+          />
+        </div>
+        <div class="col-12 col-lg-6">
+          <label for="filtroFechaHasta" class="form-label">Fecha hasta</label>
+          <input
+            class="form-control"
+            type="date"
+            name="Hasta"
+            id="filtroFechaHasta"
+            formControlName="fechaHasta"
+          />
+        </div>
+      </div>
+
+      <div class="row text-end my-2">
+        <div class="col-lg">
+          <button class="btn btn-secondary ms-auto" type="submit">
+            Filtrar
+          </button>
+          <button
+            type="button"
+            class="btn btn-primary ms-1"
+            data-bs-toggle="modal"
+            data-bs-target="#verModal"
+          >
+            Nuevo
+          </button>
+        </div>
+      </div>
+    </form>
+  </div>
+  <table class="table table-hover">
+    <thead>
+      <tr>
+        <th scope="col" class="col-4">Doctor</th>
+        <th scope="col" class="col-4">Paciente</th>
+        <th scope="col" class="col-2">Fecha</th>
+        <th scope="col" class="col-2">Categoría</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let f of fichasFiltradas">
+        <td class="align-middle">{{ obtenerDrPorId(f.idDoctor) }}</td>
+        <td class="align-middle">{{ obtenerPacientePorId(f.idPaciente) }}</td>
+        <td class="align-middle">
+          {{ convertDateFormat(formatearFecha(f.fecha)) }}
+        </td>
+        <td class="align-middle">{{ f.idCategoria.descripcion }}</td>
+        <td>
+          <div class="btn-group" role="group" aria-label="Basic example">
+            <button
+              type="button"
+              class="btn btn-outline-primary"
+              data-bs-toggle="modal"
+              data-bs-target="#verModal"
+              (click)="verFicha(f)"
+            >
+              <i class="bi bi-pencil"></i>
+            </button>
+
+            <button
+              type="button"
+              class="btn btn-outline-danger"
+              data-bs-toggle="modal"
+              data-bs-target="#eliminarModal"
+              (click)="verFicha(f)"
+            >
+              <i class="bi bi-x-circle"></i>
+            </button>
+          </div>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div
+    class="modal fade"
+    id="verModal"
+    tabindex="-1"
+    aria-labelledby="exampleModalLabel"
+    aria-hidden="true"
+  >
+    <div class="modal-dialog modal-xl">
+      <div class="modal-content">
+        <form
+          action=""
+          class="form"
+          [formGroup]="formNuevo"
+          (ngSubmit)="guardarFicha()"
+        >
+          <div class="modal-header">
+            <h1 class="modal-title fs-5" id="exampleModalLabel">Agregar</h1>
+            <button
+              type="button"
+              class="btn-close"
+              data-bs-dismiss="modal"
+              aria-label="Close"
+            ></button>
+          </div>
+          <div class="modal-body">
+            <div class="mb-3">
+              <label for="doctor-search" class="col-form-label"
+                >Buscar Doctor:</label
+              >
+              <input
+                type="text"
+                class="form-control"
+                id="doctor-search"
+                placeholder="Nombre"
+                formControlName="doctorNombre"
+              />
+              <input
+                type="text"
+                class="form-control my-2"
+                placeholder="Apellido"
+                formControlName="doctorApellido"
+              />
+              <button
+                class="btn btn-secondary"
+                type="button"
+                (click)="buscarDoctor()"
+              >
+                Buscar
+              </button>
+            </div>
+            <div class="list-group-container">
+              <ul class="list-group">
+                <li
+                  class="list-group-item"
+                  *ngFor="let doctor of doctoresNuevosFiltrados"
+                  (click)="seleccionarDoctor(doctor)"
+                  [class.active]="doctor._id == nuevaFicha.idDoctor"
+                >
+                  {{ doctor.nombre }} {{ doctor.apellido }}
+                </li>
+              </ul>
+            </div>
+
+            <!-- Input para buscar pacientes -->
+            <div class="mb-3">
+              <label for="paciente-search" class="col-form-label"
+                >Buscar Paciente:</label
+              >
+              <input
+                type="text"
+                class="form-control"
+                id="paciente-search"
+                placeholder="Nombre"
+                formControlName="pacienteNombre"
+              />
+              <input
+                type="text"
+                class="form-control my-2"
+                placeholder="Apellido"
+                formControlName="pacienteApellido"
+              />
+              <button
+                class="btn btn-secondary"
+                type="button"
+                (click)="buscarPaciente()"
+              >
+                Buscar
+              </button>
+            </div>
+            <div class="list-group-container">
+              <ul class="list-group">
+                <li
+                  class="list-group-item"
+                  *ngFor="let paciente of pacientesNuevosFiltrados"
+                  [class.active]="paciente._id == nuevaFicha.idPaciente"
+                  (click)="seleccionarPaciente(paciente)"
+                >
+                  {{ paciente.nombre }} {{ paciente.apellido }}
+                </li>
+              </ul>
+            </div>
+
+            <!-- Input para buscar categorias -->
+            <div class="mb-3">
+              <label for="categoria-search" class="col-form-label"
+                >Buscar Categorias:</label
+              >
+              <input
+                type="text"
+                class="form-control"
+                id="categoria-search"
+                placeholder="Nombre"
+                formControlName="categoria"
+              />
+              <button
+                class="btn btn-secondary"
+                type="button"
+                (click)="buscarCategoria()"
+              >
+                Buscar
+              </button>
+            </div>
+            <div class="list-group-container">
+              <ul class="list-group">
+                <li
+                  class="list-group-item"
+                  *ngFor="let categoria of categoriasNuevasFiltradas"
+                  [class.active]="categoria._id == nuevaFicha.idCategoria._id"
+                  (click)="seleccionarCategoria(categoria)"
+                >
+                  {{ categoria.descripcion }}
+                </li>
+              </ul>
+            </div>
+
+            <!-- Input para la fecha -->
+            <div class="row">
+              <div class="mb-3 col-6">
+                <label for="reserva-fecha" class="col-form-label">Fecha:</label>
+                <input
+                  type="date"
+                  class="form-control"
+                  id="reserva-fecha"
+                  formControlName="fecha"
+                />
+              </div>
+            </div>
+            <div class="mb-3">
+              <label for="motivo-textarea" class="form-label"
+                >Motivo: </label
+              >
+              <textarea
+                class="form-control"
+                id="motivo-textarea"
+                rows="10"
+                formControlName="motivo"
+              ></textarea>
+              <label for="diagnostico-textarea" class="form-label"
+                >Diagnóstico: </label
+              >
+              <textarea
+                class="form-control"
+                id="diagnostico-textarea"
+                rows="10"
+                formControlName="diagnostico"
+              ></textarea>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button
+              type="button"
+              class="btn btn-secondary"
+              data-bs-dismiss="modal"
+              (click)="limpiarFichaNuevo()"
+            >
+              Cerrar
+            </button>
+            <button
+              type="submit"
+              class="btn btn-primary"
+              [disabled]="!permitidoGuardar"
+              data-bs-dismiss="modal"
+            >
+              Guardar
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal para eliminar -->
+  <div class="modal fade" id="eliminarModal" tabindex="-1">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">Eliminar</h5>
+          <button
+            type="button"
+            class="btn-close"
+            data-bs-dismiss="modal"
+            aria-label="Close"
+          ></button>
+        </div>
+        <div class="modal-body">
+          <p>
+            ¿Eliminar la ficha del paciente
+            {{ obtenerPacientePorId(fichaSeleccionada?.idPaciente!) }} con el/la
+            dr/a. {{ obtenerDrPorId(fichaSeleccionada?.idDoctor!) }}?
+          </p>
+        </div>
+        <div class="modal-footer">
+          <button
+            type="button"
+            class="btn btn-secondary"
+            data-bs-dismiss="modal"
+            (click)="limpiarFichaActual()"
+          >
+            Cancelar
+          </button>
+          <button
+            type="button"
+            class="btn btn-danger"
+            (click)="eliminarFicha()"
+            data-bs-dismiss="modal"
+          >
+            Eliminar
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
