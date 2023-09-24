@@ -10,7 +10,7 @@ const fichaSchema = new Schema({
   idReserva: {
     type: Schema.Types.ObjectId,
     ref: 'reserva',
-    required: true
+    required: false
   },
   motivoConsulta: {
     type: String,
@@ -35,7 +35,7 @@ const fichaSchema = new Schema({
     ref: 'categoria',
     required: true
   }
-  
+
 }, { timestamps: true })
 
 module.exports = mongoose.model('Ficha', fichaSchema)

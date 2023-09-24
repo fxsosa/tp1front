@@ -49,7 +49,7 @@
         </div>
       </div>
       <div class="row">
-        <div class="col-12 col-lg-6">
+        <div class="col-12 col-lg-4">
           <label for="filtroFechaDesde" class="form-label">Fecha desde</label>
           <input
             class="form-control"
@@ -59,7 +59,7 @@
             formControlName="fechaDesde"
           />
         </div>
-        <div class="col-12 col-lg-6">
+        <div class="col-12 col-lg-4">
           <label for="filtroFechaHasta" class="form-label">Fecha hasta</label>
           <input
             class="form-control"
@@ -68,6 +68,21 @@
             id="filtroFechaHasta"
             formControlName="fechaHasta"
           />
+        </div>
+
+        <div class="col-12 col-lg-4">
+          <label for="filtroCategoria" class="form-label">Categoría</label>
+          <select
+            class="form-select"
+            aria-label="Seleccionar categoría"
+            id="filtroCategoria"
+            formControlName = "categoria"
+          >
+            <option value="" selected>Todas</option>
+            <option *ngFor="let categoria of allCategorias">
+              {{ categoria.descripcion }}
+            </option>
+          </select>
         </div>
       </div>
 
@@ -104,7 +119,7 @@
         <td class="align-middle">
           {{ convertDateFormat(formatearFecha(f.fecha)) }}
         </td>
-        <td class="align-middle">{{ f.idCategoria.descripcion }}</td>
+        <td class="align-middle">{{ obtenerCategoriaPorId(f.idCategoria) }}</td>
         <td>
           <div class="btn-group" role="group" aria-label="Basic example">
             <button
@@ -158,140 +173,177 @@
           </div>
           <div class="modal-body">
             <div class="mb-3">
-              <label for="doctor-search" class="col-form-label"
-                >Buscar Doctor:</label
-              >
-              <input
-                type="text"
-                class="form-control"
-                id="doctor-search"
-                placeholder="Nombre"
-                formControlName="doctorNombre"
-              />
-              <input
-                type="text"
-                class="form-control my-2"
-                placeholder="Apellido"
-                formControlName="doctorApellido"
-              />
-              <button
-                class="btn btn-secondary"
-                type="button"
-                (click)="buscarDoctor()"
-              >
-                Buscar
-              </button>
-            </div>
-            <div class="list-group-container">
-              <ul class="list-group">
-                <li
-                  class="list-group-item"
-                  *ngFor="let doctor of doctoresNuevosFiltrados"
-                  (click)="seleccionarDoctor(doctor)"
-                  [class.active]="doctor._id == nuevaFicha.idDoctor"
-                >
-                  {{ doctor.nombre }} {{ doctor.apellido }}
-                </li>
-              </ul>
-            </div>
+              <div class="row">
+                <div class="col-12 col-lg-6">
+                  <label for="doctor-search" class="col-form-label"
+                    >Buscar Doctor:</label
+                  >
+                  <div class="row mb-2">
+                    <div class="input-group">
+                      <input
+                        type="text"
+                        class="form-control"
+                        id="doctor-search"
+                        placeholder="Nombre"
+                        formControlName="doctorNombre"
+                      />
+                      <input
+                        type="text"
+                        class="form-control"
+                        placeholder="Apellido"
+                        formControlName="doctorApellido"
+                      />
+                    </div>
+                  </div>
+                  <div class="row">
+                    <div class="me-auto">
+                      <button
+                        class="btn btn-secondary"
+                        type="button"
+                        (click)="buscarDoctor()"
+                      >
+                        Buscar
+                      </button>
+                    </div>
+                  </div>
+                  <div class="row">
+                    <div class="list-group-container">
+                      <ul class="list-group">
+                        <li
+                          class="list-group-item"
+                          *ngFor="let doctor of doctoresNuevosFiltrados"
+                          (click)="seleccionarDoctor(doctor)"
+                          [class.active]="doctor._id == nuevaFicha.idDoctor"
+                        >
+                          {{ doctor.nombre }} {{ doctor.apellido }}
+                        </li>
+                      </ul>
+                    </div>
+                  </div>
+                </div>
+                <!-- Input para buscar pacientes -->
+                <div class="col-12 col-lg-6">
+                  <label for="paciente-search" class="col-form-label"
+                    >Buscar Paciente:</label
+                  >
 
-            <!-- Input para buscar pacientes -->
-            <div class="mb-3">
-              <label for="paciente-search" class="col-form-label"
-                >Buscar Paciente:</label
-              >
-              <input
-                type="text"
-                class="form-control"
-                id="paciente-search"
-                placeholder="Nombre"
-                formControlName="pacienteNombre"
-              />
-              <input
-                type="text"
-                class="form-control my-2"
-                placeholder="Apellido"
-                formControlName="pacienteApellido"
-              />
-              <button
-                class="btn btn-secondary"
-                type="button"
-                (click)="buscarPaciente()"
-              >
-                Buscar
-              </button>
-            </div>
-            <div class="list-group-container">
-              <ul class="list-group">
-                <li
-                  class="list-group-item"
-                  *ngFor="let paciente of pacientesNuevosFiltrados"
-                  [class.active]="paciente._id == nuevaFicha.idPaciente"
-                  (click)="seleccionarPaciente(paciente)"
-                >
-                  {{ paciente.nombre }} {{ paciente.apellido }}
-                </li>
-              </ul>
+                  <div class="row mb-2">
+                    <div class="input-group">
+                      <input
+                        type="text"
+                        class="form-control"
+                        id="paciente-search"
+                        placeholder="Nombre"
+                        formControlName="pacienteNombre"
+                      />
+                      <input
+                        type="text"
+                        class="form-control"
+                        placeholder="Apellido"
+                        formControlName="pacienteApellido"
+                      />
+                    </div>
+                  </div>
+                  <div class="row">
+                    <div class="me-auto">
+                      <button
+                        class="btn btn-secondary"
+                        type="button"
+                        (click)="buscarPaciente()"
+                      >
+                        Buscar
+                      </button>
+                    </div>
+                  </div>
+                  <div class="row">
+                    <div class="list-group-container">
+                      <ul class="list-group">
+                        <li
+                          class="list-group-item"
+                          *ngFor="let paciente of pacientesNuevosFiltrados"
+                          [class.active]="paciente._id == nuevaFicha.idPaciente"
+                          (click)="seleccionarPaciente(paciente)"
+                        >
+                          {{ paciente.nombre }} {{ paciente.apellido }}
+                        </li>
+                      </ul>
+                    </div>
+                  </div>
+                </div>
+              </div>
             </div>
 
             <!-- Input para buscar categorias -->
             <div class="mb-3">
-              <label for="categoria-search" class="col-form-label"
-                >Buscar Categorias:</label
-              >
-              <input
-                type="text"
-                class="form-control"
-                id="categoria-search"
-                placeholder="Nombre"
-                formControlName="categoria"
-              />
-              <button
-                class="btn btn-secondary"
-                type="button"
-                (click)="buscarCategoria()"
-              >
-                Buscar
-              </button>
-            </div>
-            <div class="list-group-container">
-              <ul class="list-group">
-                <li
-                  class="list-group-item"
-                  *ngFor="let categoria of categoriasNuevasFiltradas"
-                  [class.active]="categoria._id == nuevaFicha.idCategoria._id"
-                  (click)="seleccionarCategoria(categoria)"
-                >
-                  {{ categoria.descripcion }}
-                </li>
-              </ul>
-            </div>
-
-            <!-- Input para la fecha -->
-            <div class="row">
-              <div class="mb-3 col-6">
-                <label for="reserva-fecha" class="col-form-label">Fecha:</label>
-                <input
-                  type="date"
-                  class="form-control"
-                  id="reserva-fecha"
-                  formControlName="fecha"
-                />
+              <div class="row">
+                <div class="col-12 col-lg-6">
+                  <label for="categoria-search" class="col-form-label"
+                    >Buscar Categorias:</label
+                  >
+                  <div class="row mx-1">
+                    <input
+                      type="text"
+                      class="form-control"
+                      id="categoria-search"
+                      placeholder="Nombre"
+                      formControlName="categoria"
+                    />
+                  </div>
+                  <div class="row">
+                    <div class="me-auto">
+                      <button
+                        class="btn btn-secondary"
+                        type="button"
+                        (click)="buscarCategoria()"
+                      >
+                        Buscar
+                      </button>
+                    </div>
+                  </div>
+                  <div class="row">
+                    <div class="list-group-container">
+                      <ul class="list-group">
+                        <li
+                          class="list-group-item"
+                          *ngFor="let categoria of categoriasNuevasFiltradas"
+                          [class.active]="
+                            categoria._id == nuevaFicha.idCategoria
+                          "
+                          (click)="seleccionarCategoria(categoria)"
+                        >
+                          {{ categoria.descripcion }}
+                        </li>
+                      </ul>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-12 col-lg-6">
+                  <!-- Input para la fecha -->
+                  <div class="row mx-1">
+                    <label for="reserva-fecha" class="col-form-label"
+                      >Fecha:</label
+                    >
+                    <input
+                      type="date"
+                      class="form-control"
+                      id="reserva-fecha"
+                      formControlName="fecha"
+                    />
+                  </div>
+                </div>
               </div>
             </div>
             <div class="mb-3">
-              <label for="motivo-textarea" class="form-label"
-                >Motivo: </label
-              >
+              <label for="motivo-textarea" class="form-label">Motivo: </label>
               <textarea
                 class="form-control"
                 id="motivo-textarea"
-                rows="10"
+                rows="3"
                 formControlName="motivo"
               ></textarea>
               <label for="diagnostico-textarea" class="form-label"
-                >Diagnóstico: </label
-              >
+                >Diagnóstico:
+              </label>
               <textarea
                 class="form-control"
                 id="diagnostico-textarea"

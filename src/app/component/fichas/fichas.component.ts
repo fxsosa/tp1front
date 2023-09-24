@@ -8,15 +8,15 @@ import { CategoriaService } from 'src/app/service/categoria.service';
 import { FichaService } from 'src/app/service/ficha.service';
 import { PersonaService } from 'src/app/service/persona.service';
 
- interface NuevFicha {
+interface NuevFicha {
   _id: string;
-   fecha: string|undefined;
-   motivoConsulta: string | undefined;
-   idDoctor: string | undefined;
-   idPaciente: string | undefined;
-   idCategoria: Categoria | undefined;
-   diagnostico: string | undefined;
- }
+  fecha: string | undefined;
+  motivoConsulta: string | undefined;
+  idDoctor: string | undefined;
+  idPaciente: string | undefined;
+  idCategoria: string | undefined;
+  diagnostico: string | undefined;
+}
 
 @Component({
   selector: 'app-fichas',
@@ -32,6 +32,7 @@ export class FichasComponent {
     pacienteApellido: new FormControl(''),
     fechaDesde: new FormControl(''),
     fechaHasta: new FormControl(''),
+    categoria: new FormControl(''),
   });
 
   //formulario para crear una nueva ficha
@@ -83,7 +84,7 @@ export class FichasComponent {
     motivoConsulta: '',
     idDoctor: '',
     idPaciente: '',
-    idCategoria: new Categoria(),
+    idCategoria: '',
     diagnostico: '',
   };
 
@@ -116,6 +117,8 @@ export class FichasComponent {
           return persona.esDoctor === false;
         });
         this.allCategorias = ficha[2].lista;
+        console.log(this.allCategorias);
+
       },
       complete: () => {
         this.formFiltrar
@@ -125,20 +128,21 @@ export class FichasComponent {
           .get('fechaHasta')
           ?.setValue(this.formatearFecha(this.fechaActual));
         this.filtrar();
-        console.log('Filtrado completo');
       },
     });
     this.formNuevo.valueChanges.subscribe({
       next: (valor) => {
         if (
-          this.nuevaFicha.diagnostico !== '' &&
+          valor.diagnostico !== '' &&
           this.nuevaFicha.idDoctor !== '' &&
           this.nuevaFicha.idPaciente !== '' &&
           valor.fecha !== '' &&
           valor.motivo !== '' &&
           valor.categoria !== ''
         ) {
-          this.nuevaFicha.fecha = new Date(this.pasarAISO(valor.fecha!, '00:00'));
+          this.nuevaFicha.fecha = new Date(
+            this.pasarAISO(valor.fecha!, '00:00')
+          );
           this.nuevaFicha.motivoConsulta = valor.motivo!;
           this.nuevaFicha.diagnostico = valor.diagnostico!;
           this.permitidoGuardar = true;
@@ -154,27 +158,29 @@ export class FichasComponent {
    */
   filtrar() {
     this.fichasFiltradas = this.allFichas.filter((ficha) => {
-      const nombreDoctorMatch = this.allDoctores.some((doctor) => {
-        return doctor.nombre
-          .toLowerCase()
-          .includes(this.formFiltrar.value.doctorNombre?.toLowerCase()!);
-      });
+      const doctor = this.allDoctores.find((doctor) => {
+        return doctor._id == ficha.idDoctor;
+      }
+      );
+      const paciente = this.allPacientes.find((paciente) => {
+        return paciente._id == ficha.idPaciente;
+      }
+      );
+      const categoria = this.allCategorias.find((categoria) => {
+        return categoria._id == ficha.idCategoria;
+      }
+      );
+      const doctorMatch = doctor?.nombre.toLowerCase().includes(
+        this.formFiltrar.value.doctorNombre!.toLowerCase()
+      ) && doctor?.apellido.toLowerCase().includes(this.formFiltrar.value.doctorApellido!.toLowerCase());
+      const pacienteMatch = paciente?.nombre.toLowerCase().includes(
+        this.formFiltrar.value.pacienteNombre!.toLowerCase()
+      ) && paciente?.apellido.toLowerCase().includes(this.formFiltrar.value.pacienteApellido!.toLowerCase());
 
-      const apellidoDoctorMatch = this.allDoctores.some((doctor) => {
-        return doctor.apellido
-          .toLowerCase()
-          .includes(this.formFiltrar.value.doctorApellido?.toLowerCase()!);
-      });
-      const nombrePacienteMatch = this.allPacientes.some((paciente) => {
-        return paciente.nombre
-          .toLowerCase()
-          .includes(this.formFiltrar.value.pacienteNombre?.toLowerCase()!);
-      });
-      const apellidoPacienteMatch = this.allPacientes.some((paciente) => {
-        return paciente.apellido
-          .toLowerCase()
-          .includes(this.formFiltrar.value.pacienteApellido?.toLowerCase()!);
-      });
+      const categoriaMatch = categoria?.descripcion.includes(
+        this.formFiltrar.value.categoria!
+      );
+
       const fechaDesdeMatch =
         this.formFiltrar.value.fechaDesde !== ''
           ? this.formFiltrar.value.fechaDesde! <=
@@ -186,16 +192,9 @@ export class FichasComponent {
           ? this.formFiltrar.value.fechaHasta! >=
             this.formatearFecha(ficha.fecha)
           : true;
-      console.log(this.allFichas);
+      console.log(doctorMatch, pacienteMatch, categoriaMatch, fechaDesdeMatch, fechaHastaMatch);
 
-      return (
-        nombreDoctorMatch &&
-        apellidoDoctorMatch &&
-        nombrePacienteMatch &&
-        apellidoPacienteMatch &&
-        fechaDesdeMatch &&
-        fechaHastaMatch
-      );
+      return pacienteMatch && doctorMatch && categoriaMatch && fechaDesdeMatch && fechaHastaMatch;
     });
   }
 
@@ -382,7 +381,7 @@ export class FichasComponent {
    * @param categoria Categoria seleccionada en la lista de categorias filtradas
    */
   seleccionarCategoria(categoria: Categoria) {
-    this.nuevaFicha.idCategoria = categoria;
+    this.nuevaFicha.idCategoria = categoria._id;
     this.formNuevo.get('categoria')?.setValue(categoria.descripcion);
   }
 
@@ -406,7 +405,7 @@ export class FichasComponent {
       motivoConsulta: '',
       idDoctor: '',
       idPaciente: '',
-      idCategoria: new Categoria(),
+      idCategoria: '',
       diagnostico: '',
     };
     this.permitidoGuardar = false;
