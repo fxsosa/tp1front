@@ -42,9 +42,9 @@ const createFicha = async (req, res) => {
     if (!mongoose.Types.ObjectId.isValid(idPaciente)) {
       return res.status(404).json({error: 'No such Paciente'})
     }
-    if (!mongoose.Types.ObjectId.isValid(idReserva)) {
+   /*  if (!mongoose.Types.ObjectId.isValid(idReserva)) {
       return res.status(404).json({error: 'No such Reserva'})
-    }
+    } */
     if (!mongoose.Types.ObjectId.isValid(idCategoria)) {
       return res.status(404).json({error: 'No such Categoria'})
     }

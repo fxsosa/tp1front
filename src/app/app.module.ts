@@ -13,6 +13,8 @@ import { HttpClientModule } from '@angular/common/http';
 import { HomePageComponent } from './component/home-page/home-page.component';
 import { CategoriasComponent } from './component/categorias/categorias.component';
 import { ReservasComponent } from './component/reservas/reservas.component';
+import { FichasComponent } from './component/fichas/fichas.component';
+import { ExportAsModule } from 'ngx-export-as';
 
 @NgModule({
   declarations: [
@@ -20,16 +22,18 @@ import { ReservasComponent } from './component/reservas/reservas.component';
     CategoriaComponent,
     HomePageComponent,
     CategoriasComponent,
-    ReservasComponent
+    ReservasComponent,
+    FichasComponent,
   ],
   imports: [
     BrowserModule,
     AppRoutingModule,
     HttpClientModule,
     FormsModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    ExportAsModule,
   ],
   providers: [CategoriaService, PersonaService, ReservaService, FichaService],
-  bootstrap: [AppComponent]
+  bootstrap: [AppComponent],
 })
-export class AppModule { }
+export class AppModule {}
