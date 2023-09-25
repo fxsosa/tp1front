@@ -91,7 +91,7 @@ export class FichasComponent {
   //lista de fichas filtradas
   fichasFiltradas: Ficha[] = [];
   //ficha seleccionada en el modal, ya sea para editar o eliminar
-  fichaSeleccionada: Ficha | undefined;
+  fichaSeleccionada: Ficha | undefined = new Ficha();
   //fecha actual
   fechaActual = new Date();
 
