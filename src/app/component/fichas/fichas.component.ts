@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
+import { ExportAsConfig, ExportAsService } from 'ngx-export-as';
 import { forkJoin } from 'rxjs';
 import { Categoria } from 'src/app/models/categoriaModel';
 import { Ficha } from 'src/app/models/fichaModel';
@@ -24,6 +25,19 @@ interface NuevFicha {
   styleUrls: ['./fichas.component.css'],
 })
 export class FichasComponent {
+  //configuración para exportar a pdf
+  exportarPDF: ExportAsConfig = {
+    type: 'pdf', // the type you want to download
+    elementIdOrContent: 'tablaFichas', // the id of html/table element
+  };
+  //configuración para exportar a excel
+  exportarExcel: ExportAsConfig = {
+    type: 'xlsx', // the type you want to download
+    elementIdOrContent: 'tablaFichas', // the id of html/table element
+  };
+  //variable que declara si se está exportando o no
+  exporting: boolean = false;
+
   //Formulario de filtros
   formFiltrar = new FormGroup({
     doctorNombre: new FormControl(''),
@@ -46,6 +60,9 @@ export class FichasComponent {
     pacienteApellido: new FormControl(''),
     categoria: new FormControl(''),
   });
+
+  //opcion utilizada si una ficha es nueva o se quiere modificar una existente
+  opcionDeFicha: string = 'Nuevo';
 
   // Horas disponibles
   horasDisponibles: any[] = [
@@ -78,7 +95,7 @@ export class FichasComponent {
   //fecha actual
   fechaActual = new Date();
 
-  nuevaFicha: Ficha = {
+  /*nuevaFicha: Ficha = {
     _id: '',
     fecha: this.fechaActual,
     motivoConsulta: '',
@@ -86,7 +103,7 @@ export class FichasComponent {
     idPaciente: '',
     idCategoria: '',
     diagnostico: '',
-  };
+  };*/
 
   ///datos para filtrar en formNuevo
   doctoresNuevosFiltrados: Persona[] = [];
@@ -95,6 +112,7 @@ export class FichasComponent {
   permitidoGuardar: boolean = false;
 
   constructor(
+    private exportAsService: ExportAsService,
     private fichaService: FichaService,
     private personaService: PersonaService,
     private categoriaService: CategoriaService
@@ -117,8 +135,6 @@ export class FichasComponent {
           return persona.esDoctor === false;
         });
         this.allCategorias = ficha[2].lista;
-        console.log(this.allCategorias);
-
       },
       complete: () => {
         this.formFiltrar
@@ -134,17 +150,17 @@ export class FichasComponent {
       next: (valor) => {
         if (
           valor.diagnostico !== '' &&
-          this.nuevaFicha.idDoctor !== '' &&
-          this.nuevaFicha.idPaciente !== '' &&
+          this.fichaSeleccionada!.idDoctor !== '' &&
+          this.fichaSeleccionada!.idPaciente !== '' &&
           valor.fecha !== '' &&
           valor.motivo !== '' &&
           valor.categoria !== ''
         ) {
-          this.nuevaFicha.fecha = new Date(
+          this.fichaSeleccionada!.fecha = new Date(
             this.pasarAISO(valor.fecha!, '00:00')
           );
-          this.nuevaFicha.motivoConsulta = valor.motivo!;
-          this.nuevaFicha.diagnostico = valor.diagnostico!;
+          this.fichaSeleccionada!.motivoConsulta = valor.motivo!;
+          this.fichaSeleccionada!.diagnostico = valor.diagnostico!;
           this.permitidoGuardar = true;
         } else {
           this.permitidoGuardar = false;
@@ -160,22 +176,27 @@ export class FichasComponent {
     this.fichasFiltradas = this.allFichas.filter((ficha) => {
       const doctor = this.allDoctores.find((doctor) => {
         return doctor._id == ficha.idDoctor;
-      }
-      );
+      });
       const paciente = this.allPacientes.find((paciente) => {
         return paciente._id == ficha.idPaciente;
-      }
-      );
+      });
       const categoria = this.allCategorias.find((categoria) => {
         return categoria._id == ficha.idCategoria;
-      }
-      );
-      const doctorMatch = doctor?.nombre.toLowerCase().includes(
-        this.formFiltrar.value.doctorNombre!.toLowerCase()
-      ) && doctor?.apellido.toLowerCase().includes(this.formFiltrar.value.doctorApellido!.toLowerCase());
-      const pacienteMatch = paciente?.nombre.toLowerCase().includes(
-        this.formFiltrar.value.pacienteNombre!.toLowerCase()
-      ) && paciente?.apellido.toLowerCase().includes(this.formFiltrar.value.pacienteApellido!.toLowerCase());
+      });
+      const doctorMatch =
+        doctor?.nombre
+          .toLowerCase()
+          .includes(this.formFiltrar.value.doctorNombre!.toLowerCase()) &&
+        doctor?.apellido
+          .toLowerCase()
+          .includes(this.formFiltrar.value.doctorApellido!.toLowerCase());
+      const pacienteMatch =
+        paciente?.nombre
+          .toLowerCase()
+          .includes(this.formFiltrar.value.pacienteNombre!.toLowerCase()) &&
+        paciente?.apellido
+          .toLowerCase()
+          .includes(this.formFiltrar.value.pacienteApellido!.toLowerCase());
 
       const categoriaMatch = categoria?.descripcion.includes(
         this.formFiltrar.value.categoria!
@@ -192,9 +213,14 @@ export class FichasComponent {
           ? this.formFiltrar.value.fechaHasta! >=
             this.formatearFecha(ficha.fecha)
           : true;
-      console.log(doctorMatch, pacienteMatch, categoriaMatch, fechaDesdeMatch, fechaHastaMatch);
 
-      return pacienteMatch && doctorMatch && categoriaMatch && fechaDesdeMatch && fechaHastaMatch;
+      return (
+        pacienteMatch &&
+        doctorMatch &&
+        categoriaMatch &&
+        fechaDesdeMatch &&
+        fechaHastaMatch
+      );
     });
   }
 
@@ -275,9 +301,28 @@ export class FichasComponent {
   /**
    * Guarda la ficha seleccionada para el modal
    * @param ficha ficha que se quiere ver en el modal
+   * @param opcion "Nuevo" si es nuevo, "Modificar" si se quiere modificar
    */
-  verFicha(ficha: Ficha) {
+  verFicha(ficha: Ficha, opcion: string) {
+    this.opcionDeFicha = opcion;
     this.fichaSeleccionada = ficha;
+    const doctor = this.allDoctores.find((doctor) => {
+      return doctor._id == ficha.idDoctor;
+    });
+    const paciente = this.allPacientes.find((paciente) => {
+      return paciente._id == ficha.idPaciente;
+    });
+    const categoria = this.allCategorias.find((categoria) => {
+      return categoria._id == ficha.idCategoria;
+    });
+    this.formNuevo.get('doctorNombre')?.setValue(doctor?.nombre!);
+    this.formNuevo.get('doctorApellido')?.setValue(doctor?.apellido!);
+    this.formNuevo.get('pacienteNombre')?.setValue(paciente?.nombre!);
+    this.formNuevo.get('pacienteApellido')?.setValue(paciente?.apellido!);
+    this.formNuevo.get('categoria')?.setValue(categoria?.descripcion!);
+    this.formNuevo.get('fecha')?.setValue(this.formatearFecha(ficha.fecha));
+    this.formNuevo.get('motivo')?.setValue(ficha.motivoConsulta);
+    this.formNuevo.get('diagnostico')?.setValue(ficha.diagnostico);
   }
   /**
    * Cambia el formato de la fecha a uno utilizado en nuestra region
@@ -294,6 +339,7 @@ export class FichasComponent {
    */
   limpiarFichaActual() {
     this.fichaSeleccionada = new Ficha();
+    this.opcionDeFicha = 'Nuevo';
   }
 
   /**
@@ -307,6 +353,9 @@ export class FichasComponent {
           return ficha._id !== this.fichaSeleccionada!._id;
         });
         this.filtrar();
+        this.limpiarFichaActual();
+        this.limpiarFichaNuevo();
+
       },
       error: (error) => {
         console.log(error);
@@ -334,7 +383,8 @@ export class FichasComponent {
    * @param doctor Doctor seleccionado en la lista de doctores filtrados
    */
   seleccionarDoctor(doctor: Persona) {
-    this.nuevaFicha.idDoctor = doctor._id;
+
+    this.fichaSeleccionada!.idDoctor = doctor._id;
     this.formNuevo.get('doctorNombre')?.setValue(doctor.nombre);
     this.formNuevo.get('doctorApellido')?.setValue(doctor.apellido);
   }
@@ -359,7 +409,8 @@ export class FichasComponent {
    * @param paciente Paciente seleccionado en la lista de pacientes filtrados
    */
   seleccionarPaciente(paciente: Persona) {
-    this.nuevaFicha.idPaciente = paciente._id;
+
+    this.fichaSeleccionada!.idPaciente = paciente._id;
     this.formNuevo.get('pacienteNombre')?.setValue(paciente.nombre);
     this.formNuevo.get('pacienteApellido')?.setValue(paciente.apellido);
   }
@@ -381,7 +432,8 @@ export class FichasComponent {
    * @param categoria Categoria seleccionada en la lista de categorias filtradas
    */
   seleccionarCategoria(categoria: Categoria) {
-    this.nuevaFicha.idCategoria = categoria._id;
+
+    this.fichaSeleccionada!.idCategoria = categoria._id;
     this.formNuevo.get('categoria')?.setValue(categoria.descripcion);
   }
 
@@ -399,23 +451,20 @@ export class FichasComponent {
       categoria: '',
       diagnostico: '',
     });
-    this.nuevaFicha = {
-      _id: '',
-      fecha: new Date(),
-      motivoConsulta: '',
-      idDoctor: '',
-      idPaciente: '',
-      idCategoria: '',
-      diagnostico: '',
-    };
     this.permitidoGuardar = false;
+    this.doctoresNuevosFiltrados = [];
+    this.pacientesNuevosFiltrados = [];
+    this.categoriasNuevasFiltradas = [];
+    this.opcionDeFicha = 'Nuevo';
+    this.fichaSeleccionada = new Ficha();
   }
 
   /**
-   * Guarda la ficha nueva en la base de datos
+   * Guarda la ficha nueva, o modifica la existente en la base de datos
    */
   guardarFicha() {
-    this.fichaService.create(this.nuevaFicha).subscribe({
+    if(this.opcionDeFicha==='Nuevo'){
+    this.fichaService.create(this.fichaSeleccionada!).subscribe({
       next: (data) => {
         this.allFichas.push(data);
         this.filtrar();
@@ -425,5 +474,43 @@ export class FichasComponent {
         console.log(error);
       },
     });
+  } else{
+    this.fichaService.update(this.fichaSeleccionada).subscribe({
+      next: () => {
+
+        this.allFichas = this.allFichas.map(ficha => {
+          if(ficha._id === this.fichaSeleccionada!._id){
+            return this.fichaSeleccionada!;
+          } else{
+            return ficha;
+          }
+        })
+        this.filtrar();
+        this.limpiarFichaActual();
+        this.limpiarFichaNuevo();
+      },
+      error: (error) => {
+        console.log(error);
+      },
+    })
+  }
+  }
+
+  /**
+   * Exporta la tabla de fichas a un archivo
+   * @param tipo tipo de archivo a exportar
+   */
+  exportar(tipo: string) {
+    this.exporting = true;
+
+    if (tipo === 'pdf') {
+      this.exportAsService.save(this.exportarPDF, 'fichas').subscribe(() => {
+        this.exporting = false;
+      });
+    } else {
+      this.exportAsService.save(this.exportarExcel, 'fichas').subscribe(() => {
+        this.exporting = false;
+      });
+    }
   }
 }

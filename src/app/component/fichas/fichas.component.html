@@ -76,7 +76,7 @@
             class="form-select"
             aria-label="Seleccionar categoría"
             id="filtroCategoria"
-            formControlName = "categoria"
+            formControlName="categoria"
           >
             <option value="" selected>Todas</option>
             <option *ngFor="let categoria of allCategorias">
@@ -88,9 +88,23 @@
 
       <div class="row text-end my-2">
         <div class="col-lg">
-          <button class="btn btn-secondary ms-auto" type="submit">
-            Filtrar
+          <button
+            type="button"
+            class="btn btn-outline-primary ms-auto"
+            (click)="exportar('pdf')"
+          >
+            <i class="bi bi-filetype-pdf"></i>
           </button>
+
+          <button
+            type="button"
+            class="btn btn-outline-danger mx-2 "
+            (click)="exportar('excel')"
+          >
+            <i class="bi bi-file-earmark-excel"></i>
+          </button>
+
+          <button class="btn btn-secondary" type="submit">Filtrar</button>
           <button
             type="button"
             class="btn btn-primary ms-1"
@@ -103,13 +117,16 @@
       </div>
     </form>
   </div>
-  <table class="table table-hover">
+  <table class="table table-hover" id="tablaFichas">
     <thead>
       <tr>
-        <th scope="col" class="col-4">Doctor</th>
-        <th scope="col" class="col-4">Paciente</th>
+        <th scope="col" class="col-3">Doctor</th>
+        <th scope="col" class="col-3">Paciente</th>
         <th scope="col" class="col-2">Fecha</th>
         <th scope="col" class="col-2">Categoría</th>
+        <th scope="col" class="col-2" data-html2canvas-ignore="true">
+
+        </th>
       </tr>
     </thead>
     <tbody>
@@ -121,13 +138,26 @@
         </td>
         <td class="align-middle">{{ obtenerCategoriaPorId(f.idCategoria) }}</td>
         <td>
-          <div class="btn-group" role="group" aria-label="Basic example">
+          <div
+            class="btn-group" data-html2canvas-ignore="true"
+            role="group"
+            aria-label="Basic example"
+          >
+            <button
+              type="button"
+              class="btn btn-outline-success"
+              data-bs-toggle="modal"
+              data-bs-target="#verModal"
+              (click)="verFicha(f, 'Ver')"
+            >
+              <i class="bi bi-eye"></i>
+            </button>
             <button
               type="button"
               class="btn btn-outline-primary"
               data-bs-toggle="modal"
               data-bs-target="#verModal"
-              (click)="verFicha(f)"
+              (click)="verFicha(f, 'Modificar')"
             >
               <i class="bi bi-pencil"></i>
             </button>
@@ -137,7 +167,7 @@
               class="btn btn-outline-danger"
               data-bs-toggle="modal"
               data-bs-target="#eliminarModal"
-              (click)="verFicha(f)"
+              (click)="verFicha(f, 'modificar')"
             >
               <i class="bi bi-x-circle"></i>
             </button>
@@ -163,7 +193,7 @@
           (ngSubmit)="guardarFicha()"
         >
           <div class="modal-header">
-            <h1 class="modal-title fs-5" id="exampleModalLabel">Agregar</h1>
+            <h1 class="modal-title fs-5" id="exampleModalLabel">{{opcionDeFicha}}</h1>
             <button
               type="button"
               class="btn-close"
@@ -201,6 +231,7 @@
                         class="btn btn-secondary"
                         type="button"
                         (click)="buscarDoctor()"
+                        [disabled]="opcionDeFicha==='Ver'?true:false"
                       >
                         Buscar
                       </button>
@@ -213,7 +244,7 @@
                           class="list-group-item"
                           *ngFor="let doctor of doctoresNuevosFiltrados"
                           (click)="seleccionarDoctor(doctor)"
-                          [class.active]="doctor._id == nuevaFicha.idDoctor"
+                          [class.active]="fichaSeleccionada && doctor && doctor._id === fichaSeleccionada.idDoctor"
                         >
                           {{ doctor.nombre }} {{ doctor.apellido }}
                         </li>
@@ -250,6 +281,7 @@
                         class="btn btn-secondary"
                         type="button"
                         (click)="buscarPaciente()"
+                        [disabled]="opcionDeFicha==='Ver'?true:false"
                       >
                         Buscar
                       </button>
@@ -261,7 +293,7 @@
                         <li
                           class="list-group-item"
                           *ngFor="let paciente of pacientesNuevosFiltrados"
-                          [class.active]="paciente._id == nuevaFicha.idPaciente"
+                            [class.active]="fichaSeleccionada && paciente && fichaSeleccionada.idPaciente === paciente._id"
                           (click)="seleccionarPaciente(paciente)"
                         >
                           {{ paciente.nombre }} {{ paciente.apellido }}
@@ -295,6 +327,7 @@
                         class="btn btn-secondary"
                         type="button"
                         (click)="buscarCategoria()"
+                        [disabled]="opcionDeFicha==='Ver'?true:false"
                       >
                         Buscar
                       </button>
@@ -307,7 +340,7 @@
                           class="list-group-item"
                           *ngFor="let categoria of categoriasNuevasFiltradas"
                           [class.active]="
-                            categoria._id == nuevaFicha.idCategoria
+                            fichaSeleccionada && categoria && categoria._id === fichaSeleccionada.idCategoria
                           "
                           (click)="seleccionarCategoria(categoria)"
                         >
@@ -364,7 +397,7 @@
             <button
               type="submit"
               class="btn btn-primary"
-              [disabled]="!permitidoGuardar"
+              [disabled]="opcionDeFicha==='Ver'?true:!permitidoGuardar"
               data-bs-dismiss="modal"
             >
               Guardar
