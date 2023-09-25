@@ -15,6 +15,7 @@ import { CategoriasComponent } from './component/categorias/categorias.component
 import { ReservasComponent } from './component/reservas/reservas.component';
 import { FichasComponent } from './component/fichas/fichas.component';
 import { ExportAsModule } from 'ngx-export-as';
+import { PersonaComponent } from './component/persona/persona.component';
 
 @NgModule({
   declarations: [
@@ -24,6 +25,7 @@ import { ExportAsModule } from 'ngx-export-as';
     CategoriasComponent,
     ReservasComponent,
     FichasComponent,
+    PersonaComponent,
   ],
   imports: [
     BrowserModule,
@@ -34,6 +36,6 @@ import { ExportAsModule } from 'ngx-export-as';
     ExportAsModule,
   ],
   providers: [CategoriaService, PersonaService, ReservaService, FichaService],
-  bootstrap: [AppComponent],
+  bootstrap: [AppComponent]
 })
 export class AppModule {}
