@@ -13,6 +13,8 @@ import { HttpClientModule } from '@angular/common/http';
 import { HomePageComponent } from './component/home-page/home-page.component';
 import { PersonaComponent } from './component/persona/persona.component';
 
+import { ReactiveFormsModule } from '@angular/forms';
+
 @NgModule({
   declarations: [
     AppComponent,
@@ -24,7 +26,8 @@ import { PersonaComponent } from './component/persona/persona.component';
     BrowserModule,
     AppRoutingModule,
     HttpClientModule,
-    FormsModule
+    FormsModule,
+    ReactiveFormsModule
   ],
   providers: [CategoriaService, PersonaService ],
   bootstrap: [AppComponent]
