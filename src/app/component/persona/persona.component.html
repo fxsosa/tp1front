@@ -1,45 +1,41 @@
 <div class="container">
-    <h1>Gestión de Personas</h1>
 
     <table class="table table-hover">
         <thead>
             <tr>
                 <th></th>
-                <th></th>
+                <th>Filtrar:</th>
                 <th scope="col" class="col-4">
                   <form class="d-flex" role="search">
                     <div class="input-group">
-                      <div class="input-group-text" id="btnGroupAddon"><i class="bi bi-search"></i></div>
-                      <input class="form-control text-center" type="search" placeholder="Nombre" [formControl]="filtroNombreControl" aria-label="Search">
+                      <div class="input-group-text" id="btnGroupAddon">Nombre:</div>
+                      <input class="form-control text-center" type="search" [formControl]="filtroNombreControl" aria-label="Search">
                     </div>
                   </form>
                 </th>
                 <th scope="col" class="col-4">
                   <form class="d-flex" role="search">
                     <div class="input-group">
-                      <div class="input-group-text" id="btnGroupAddon"><i class="bi bi-search"></i></div>
-                      <input class="form-control" type="search" placeholder="Apellido" [formControl]="filtroApellidoControl" aria-label="Search">
+                      <div class="input-group-text" id="btnGroupAddon">Apellido:</div>
+                      <input class="form-control" type="search" [formControl]="filtroApellidoControl" aria-label="Search">
                     </div>
                   </form>
                 </th>
                 <th scope="col" class="col-4">
                     <form class="d-flex" role="search">
                       <div class="input-group">
-                        <div class="input-group-text" id="btnGroupAddon"><i class="bi bi-search"></i></div>
+                        <div class="input-group-text" id="btnGroupAddon">Tipo:</div>
                         <select class="form-select" [formControl]="filtroTipoControl" aria-label="Default select example">
-                            <option selected>Filtrar por Tipo</option>
-                            <option value="todos">Todos</option>
+                            <option selected value="todos">Todos</option>
                             <option value="doctor">Doctor</option>
                             <option value="paciente">Paciente</option>
                         </select>
                       </div>
                     </form>
                 </th>
-                <th scope="col" class="col-2 ">
-                   <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#verModal">
-                      <i class="bi bi-plus-circle"></i>
-                    </button>
-                </th>
+                <th></th>
+                <th></th>
+                <th></th>
               </tr>
             <tr>
                 <th scope="col">Id</th>
@@ -62,8 +58,7 @@
                 <td class="align-middle">{{p.email}}</td>
                 <td>
                   <div class="btn-group" role="group" aria-label="Basic example">
-                    <button type="button" class="btn btn-outline-primary" data-bs-toggle="modal" data-bs-target="#verModal" ><i class="bi bi-pencil"></i></button>
-                    <button type="button" class="btn btn-outline-danger" data-bs-toggle="modal" data-bs-target="#eliminarModal" ><i class="bi bi-x-circle"></i></button>
+                    <button type="button" class="btn btn-outline-danger" data-bs-toggle="modal" data-bs-target="#eliminarModal" (click)="verPersona(p)">Eliminar</button>
                   </div>
                 </td>
               </tr>
@@ -133,3 +128,21 @@
     </form>
     </div>
 
+
+            <div class="modal fade" id="eliminarModal" tabindex="-1">
+                <div class="modal-dialog">
+                  <div class="modal-content">
+                    <div class="modal-header">
+                      <h5 class="modal-title">Eliminar</h5>
+                      <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                      <p>¿Eliminar la persona "{{personaUpdated.nombre}}"?</p>
+                    </div>
+                    <div class="modal-footer">
+                      <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" (click)="limpiarModal()">Cancelar</button>
+                      <button type="button" class="btn btn-danger" (click)="eliminar()" data-bs-dismiss="modal">Eliminar</button>
+                    </div>
+                  </div>
+                </div>
+              </div>

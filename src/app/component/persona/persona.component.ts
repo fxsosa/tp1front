@@ -45,6 +45,8 @@ export class PersonaComponent implements OnInit{
   filtroApellidoControl = new FormControl()
   filtroTipoControl = new FormControl();
   personasFiltradas: Persona[] = [];
+
+  tituloModal: string = 'Nuevo';
   
 
   constructor(private personaService: PersonaService){}
@@ -121,6 +123,7 @@ export class PersonaComponent implements OnInit{
   this.personaService.create(this.personaAdd).subscribe({
     next: (entity) => {
       this.personaAdd = entity;
+      this.reFiltrarPersonas();
     },
     error: (error) => {
       console.log("No se pudo crear la persona:", error);
@@ -131,10 +134,79 @@ export class PersonaComponent implements OnInit{
   this.personaService.update(this.personaUpdate).subscribe({
     next: (entity) => {
       this.personaUpdated = entity;
+      this.reFiltrarPersonas();
     },
     error: (error) => {
       console.log("No se pudo actualizar los datos de la persona:", error);
     }
+  });
+}
+
+abrirModal(opcion: string) {
+  switch (opcion) {
+    case 'editar':
+      this.tituloModal = 'Editar...';
+      this.personaUpdated = this.personaUpdate;
+      break;
+    case 'nuevo':
+      this.tituloModal = 'Nuevo';
+      break;
+  }
+}
+
+limpiarModal() {
+  this.personaUpdate = {_id:'',
+  nombre:'',
+  apellido:'',
+  telefono:'',
+  email:'',
+  cedula:'',
+  esDoctor:false};
+  this.personaUpdated = {_id:'',
+  nombre:'',
+  apellido:'',
+  telefono:'',
+  email:'',
+  cedula:'',
+  esDoctor:false};
+}
+
+verPersona(elemento: Persona) {
+  this.abrirModal('editar');
+  this.personaUpdated = {...elemento};
+  this.personaUpdate = { ...elemento};
+}
+
+eliminar(){
+  this.personaService.delete(this.personaUpdated._id).subscribe({
+    next: () => {
+      const indice = this.personas.indexOf(this.personaUpdated);
+      if(indice>-1){
+        this.personas.splice(indice,1);
+        this.reFiltrarPersonas();
+      }
+    },
+    error: () => console.log("No se pudo eliminar")
+  });
+}
+
+reFiltrarPersonas(): void {
+
+  this.personasFiltradas = this.personas.filter((persona) => {
+    const nombreMatch = this.filtroNombreControl.value
+                  ? persona.nombre
+                      .toLowerCase()
+                      .includes(this.filtroNombreControl.value)
+                  : true;
+                const apellidoMatch = this.filtroApellidoControl.value
+                  ? persona.apellido
+                      .toLowerCase()
+                      .includes(this.filtroApellidoControl.value)
+                  : true;
+                const esDoctorMatch = this.filtroTipoControl.value !== undefined
+                  ? this.filtroTipoControl.value === 'todos' ? true: this.filtroTipoControl.value === 'doctor' && persona.esDoctor ? true: this.filtroTipoControl.value === 'paciente' && !persona.esDoctor ?true: false 
+                  : true;
+                return nombreMatch && apellidoMatch && esDoctorMatch;
   });
 }
 }
